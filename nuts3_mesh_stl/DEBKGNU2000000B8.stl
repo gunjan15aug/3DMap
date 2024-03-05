@@ -1,0 +1,107 @@
+solid
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 469500.0 5932500.0 2667.0
+  vertex 470500.0 5932500.0 2667.0
+  vertex 470500.0 5931500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 468500.0 5933500.0 2667.0
+  vertex 469500.0 5933500.0 2667.0
+  vertex 469500.0 5932500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 469500.0 5933500.0 2667.0
+  vertex 470500.0 5932500.0 2667.0
+  vertex 469500.0 5932500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 467500.0 5934500.0 2667.0
+  vertex 468500.0 5934500.0 2667.0
+  vertex 468500.0 5933500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 468500.0 5934500.0 2667.0
+  vertex 469500.0 5933500.0 2667.0
+  vertex 468500.0 5933500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 468500.0 5934500.0 2667.0
+  vertex 469500.0 5934500.0 2667.0
+  vertex 469500.0 5933500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 467500.0 5935500.0 2667.0
+  vertex 468500.0 5934500.0 2667.0
+  vertex 467500.0 5934500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 467500.0 5935500.0 2667.0
+  vertex 468500.0 5935500.0 2667.0
+  vertex 468500.0 5934500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 468500.0 5935500.0 2667.0
+  vertex 469500.0 5934500.0 2667.0
+  vertex 468500.0 5934500.0 2667.0
+ endloop
+endfacet
+facet normal 0.00019995117327198386 0.0 -1.0
+ outer loop
+  vertex 466500.0 5936500.0 2666.800048828125
+  vertex 467500.0 5936500.0 2667.0
+  vertex 467500.0 5935500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 467500.0 5936500.0 2667.0
+  vertex 468500.0 5935500.0 2667.0
+  vertex 467500.0 5935500.0 2667.0
+ endloop
+endfacet
+facet normal 0.00019995117327198386 0.00019995117327198386 -1.0
+ outer loop
+  vertex 466500.0 5937500.0 2667.0
+  vertex 467500.0 5936500.0 2667.0
+  vertex 466500.0 5936500.0 2666.800048828125
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 466500.0 5937500.0 2667.0
+  vertex 467500.0 5937500.0 2667.0
+  vertex 467500.0 5936500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 465500.0 5938500.0 2667.0
+  vertex 466500.0 5938500.0 2667.0
+  vertex 466500.0 5937500.0 2667.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 466500.0 5938500.0 2667.0
+  vertex 467500.0 5937500.0 2667.0
+  vertex 466500.0 5937500.0 2667.0
+ endloop
+endfacet
+endsolid

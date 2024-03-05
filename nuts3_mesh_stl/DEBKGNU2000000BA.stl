@@ -1,0 +1,44 @@
+solid
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 701500.0 6006500.0 2650.0
+  vertex 702500.0 6005500.0 2650.0
+  vertex 701500.0 6005500.0 2650.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 701500.0 6006500.0 2650.0
+  vertex 702500.0 6006500.0 2650.0
+  vertex 702500.0 6005500.0 2650.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 702500.0 6006500.0 2650.0
+  vertex 703500.0 6005500.0 2650.0
+  vertex 702500.0 6005500.0 2650.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 702500.0 6006500.0 2650.0
+  vertex 703500.0 6006500.0 2650.0
+  vertex 703500.0 6005500.0 2650.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 703500.0 6006500.0 2650.0
+  vertex 704500.0 6005500.0 2650.0
+  vertex 703500.0 6005500.0 2650.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 703500.0 6006500.0 2650.0
+  vertex 704500.0 6006500.0 2650.0
+  vertex 704500.0 6005500.0 2650.0
+ endloop
+endfacet
+endsolid

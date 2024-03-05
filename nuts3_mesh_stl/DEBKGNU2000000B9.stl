@@ -1,0 +1,30 @@
+solid
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 551500.0 5932500.0 2670.0
+  vertex 552500.0 5932500.0 2670.0
+  vertex 552500.0 5931500.0 2670.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 552500.0 5932500.0 2670.0
+  vertex 553500.0 5931500.0 2670.0
+  vertex 552500.0 5931500.0 2670.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 551500.0 5933500.0 2670.0
+  vertex 552500.0 5932500.0 2670.0
+  vertex 551500.0 5932500.0 2670.0
+ endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+ outer loop
+  vertex 551500.0 5933500.0 2670.0
+  vertex 552500.0 5933500.0 2670.0
+  vertex 552500.0 5932500.0 2670.0
+ endloop
+endfacet
+endsolid
