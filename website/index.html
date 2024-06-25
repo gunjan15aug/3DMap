@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
+        <script src="https://cdn.babylonjs.com/recast.js"></script>
+        <script src="https://cdn.babylonjs.com/ammo.js"></script>
+        <script src="https://cdn.babylonjs.com/havok/HavokPhysics_umd.js"></script>
+        <script src="https://cdn.babylonjs.com/cannon.js"></script>
+        <script src="https://cdn.babylonjs.com/Oimo.js"></script>
+        <script src="https://cdn.babylonjs.com/earcut.min.js"></script>
+        <script src="https://cdn.babylonjs.com/babylon.js"></script>
+        <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://cdn.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://cdn.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://cdn.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://cdn.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+            
+            #canvasZone {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+<body>
+    <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var startRenderLoop = function (engine, canvas) {
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        }
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false}); };
+        var createScene = async function () {
+    // This creates a basic Babylon Scene object (non-mesh)
+    var scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(0.2, 0.59, 0.67);
+
+    scene.createDefaultCamera(true, true, true);
+    var camera = scene.getCameraById("default camera");
+    camera.lowerAlphaLimit = 4;
+    camera.upperAlphaLimit = 5.5;
+    camera.lowerBetaLimit = 1;
+    camera.upperBetaLimit = 2.5;
+    camera.alpha = 4.71; // 1.5 * pi
+    camera.beta = 1.57; // 0.5 * pi
+
+    // This creates a direction light
+    var dirLight = new BABYLON.DirectionalLight("dirLight", new BABYLON.Vector3(0.5, 0.5, 0.5), scene);
+    dirLight.intensity = 1.5;
+
+    // Add ambient light
+    var ambientLight = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+    ambientLight.intensity = 0.6;
+
+    // URL of the file hosted on GitHub
+    const githubFileUrl = 'https://raw.githubusercontent.com/gunjan15aug/3DMap/main/filenames.txt';
+
+    // Create a parent mesh
+    var parentMesh = new BABYLON.Mesh("parent", scene);
+
+    const excludedNames = ["DEBKGNU20000000S", "DEBKGNU20000007A", "DEBKGNU20000000V", "DEBKGNU20000003C", "DEBKGNU200000055", "DEBKGNU200000064", "DEBKGNU2000000A7"]; // Replace with the actual names to be excluded
+    
+    let mappingData = null; // Variable to store the mapping data
+    let mappingData2 = null; // Variable to store the mapping data
+    
+    // State to List of Districts
+    const mappingDataUrl = 'https://raw.githubusercontent.com/gunjan15aug/3DMap/main/mapping1_to_2.json'; // URL of the mapping JSON file
+    
+    // District to State
+    const mappingDataUrl2 = 'https://raw.githubusercontent.com/gunjan15aug/3DMap/main/mapping2_to_1.json'; // URL of the mapping JSON file
+    
+    await loadJSONAndStore2(mappingDataUrl2); // Load the mapping data
+    await loadJSONAndStore(mappingDataUrl); // Load the mapping data
+    
+    console.log("mappingData2", mappingData2);
+    console.log("mappingData", mappingData);
+
+    const zipFileUrl = 'https://raw.githubusercontent.com/gunjan15aug/3DMap/main/nuts3_mesh_stl_binary.zip';
+
+    async function downloadAndUnzip(url) {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            const zip = await JSZip.loadAsync(blob);
+
+            const excludedNames = ["DEBKGNU20000000S", "DEBKGNU20000007A", "DEBKGNU20000000V", "DEBKGNU20000003C", "DEBKGNU200000055", "DEBKGNU200000064", "DEBKGNU2000000A7"]; // Replace with the actual names to be excluded
+
+            zip.forEach(async (relativePath, file) => {
+                if (relativePath.endsWith('.stl')) {
+                    console.log('File:', relativePath);
+                    const fileData = await file.async('base64');
+                    const base64Data = `data:;base64,${fileData}`;
+                    const name = relativePath.split('/').pop().replace('.stl', '');
+
+                    //const result = await BABYLON.SceneLoader.ImportMeshAsync(name, "", base64Data, scene);
+                    BABYLON.SceneLoader.Append( "", base64Data, scene, undefined, undefined, undefined, ".stl", name);
+
+                    const stateId = getValueForKey2(name);
+                    console.log('State ID:', stateId);
+
+                    const listDistricts = getValueForKey(stateId);
+                    console.log('List of Districts:', listDistricts);
+
+                    //var tmpMesh = result.meshes[0];
+                    const tmpMesh = scene.getMeshByName(name);
+                    if (!excludedNames.includes(name)) {
+                        tmpMesh.flipFaces(true);
+                    }
+
+                    var material = new BABYLON.StandardMaterial("material"+name, scene);
+                    material.diffuseColor = new BABYLON.Color3(1, 1, 1); // White color
+                    tmpMesh.material = material;
+                    tmpMesh.name = name;
+                    tmpMesh.scaling = new BABYLON.Vector3(0.00001, 0.00001, 0.00001);
+                    tmpMesh.rotation.x = BABYLON.Tools.ToRadians(270);
+                    tmpMesh.parent = parentMesh;
+                }
+            });
+
+            normalizeToUnitCube(parentMesh);
+            camera.setTarget(parentMesh.position.clone());
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function fetchDataAndPrintNames(url) {
+        try {
+            const fileContent = await fetchFileContent(url);
+            if (fileContent) {
+                const names = parseNames(fileContent);
+                console.log('Names:');
+                for (const name of names) {
+                    console.log("scenes/nuts3_mesh_stl_binary/" + name + ".stl");
+                    const result = await BABYLON.SceneLoader.ImportMeshAsync(name, "scenes/nuts3_mesh_stl_binary/" + name + ".stl", null, scene);
+
+                    var tmpMesh = result.meshes[0];
+                    // Flip faces only if the name is not in the excludedNames array
+                    if (!excludedNames.includes(name)) {
+                        tmpMesh.flipFaces(true);
+                    }
+                    
+                    var material = new BABYLON.StandardMaterial("material"+name, scene);
+                    material.diffuseColor = new BABYLON.Color3(1, 1, 1); // White color
+
+                    const stateId = getValueForKey2("DEBKGNU2000000AW");
+                    console.log('State ID:', stateId);
+
+                    const listDistricts = getValueForKey(stateId);
+                    console.log('List of Districts:', listDistricts);
+
+                    if (name === "DEBKGNU2000000AW") {
+                        material = new BABYLON.StandardMaterial("material"+name, scene);
+                        material.diffuseColor = new BABYLON.Color3(0, 1, 0); // White color
+                    } else {
+                        // if name is in listDistricts
+                        if (listDistricts.includes(name)) {
+                            material = new BABYLON.StandardMaterial("material"+name, scene);
+                            material.diffuseColor = new BABYLON.Color3(0, 0, 1); // White color
+                        }
+                    }
+                   
+                    tmpMesh.material = material;
+                    tmpMesh.name = name;
+                    tmpMesh.scaling = new BABYLON.Vector3(0.00001, 0.00001, 0.00001);
+                    tmpMesh.rotation.x = BABYLON.Tools.ToRadians(270);
+                    tmpMesh.parent = parentMesh;
+                }
+            }
+            normalizeToUnitCube(parentMesh);
+            camera.setTarget(parentMesh.position.clone());
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function normalizeToUnitCube(parent) {
+        const { min, max } = parent.getHierarchyBoundingVectors();
+        const size = max.subtract(min);
+        const maxDimension = Math.max(size.x, size.y, size.z);
+
+        const scale = 1 / maxDimension;
+        const offset = min.add(size.scale(0.5)); // Center point of the bounding box
+
+        parent.getChildMeshes().forEach(mesh => {
+            mesh.position.subtractInPlace(offset);
+            mesh.position.scaleInPlace(scale);
+            mesh.scaling.scaleInPlace(scale);
+        });
+    }
+    // Call the function to fetch and print names
+    fetchDataAndPrintNames(githubFileUrl);
+    //downloadAndUnzip(zipFileUrl);
+    // Function to fetch file content from GitHub
+    async function fetchFileContent(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to fetch file');
+            }
+            return await response.text();
+        } catch (error) {
+            console.error('Error fetching file:', error);
+            return null;
+        }
+    }
+
+    
+    // Function to load JSON file asynchronously and store it in mappingData
+    async function loadJSONAndStore(url) {
+        try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        mappingData = jsonData; // Store the JSON data globally or in your desired scope
+        } catch (error) {
+        console.error(`Could not load JSON file: ${error}`);
+        }
+    }
+
+    // Function to get value for a given key from the stored mapping data
+    function getValueForKey(key) {
+        if (mappingData) {
+        return mappingData[key];
+        } else {
+        console.error('Mapping data has not been loaded yet.');
+        return null;
+        }
+    }
+
+    
+    // Function to load JSON file asynchronously and store it in mappingData
+    async function loadJSONAndStore2(url) {
+        try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const jsonData = await response.json();
+        mappingData2 = jsonData; // Store the JSON data globally or in your desired scope
+        } catch (error) {
+        console.error(`Could not load JSON file: ${error}`);
+        }
+    }
+
+    // Function to get value for a given key from the stored mapping data
+    function getValueForKey2(key) {
+        if (mappingData2) {
+        return mappingData2[key];
+        } else {
+        console.error('Mapping data has not been loaded yet.');
+        return null;
+        }
+    }
+
+    // Function to parse names from file content
+    function parseNames(fileContent) {
+        if (!fileContent) return [];
+
+        // Split file content by line breaks
+        const names = fileContent.trim().split('\n');
+        return names;
+    }
+
+
+
+    var buttonbox = document.createElement('div');
+    buttonbox.id = "buttonbox";
+    buttonbox.style.position = "absolute";
+    buttonbox.style.top = "60px";
+    buttonbox.style.left = "95%";
+    buttonbox.style.border = "5pt inset blue";
+    buttonbox.style.padding = "2pt";
+    buttonbox.style.paddingRight = "2pt";
+    buttonbox.style.width = "3em"; // Adjust the width as needed
+    buttonbox.style.display = "flex";
+    buttonbox.style.flexDirection = "column"; // Arrange buttons vertically
+    document.body.appendChild(buttonbox);
+
+
+
+    var b10 = createArrowButton("Up", "↑");
+    buttonbox.appendChild(b10);
+    b10.onclick = function () {
+        CameraMoveUp();
+    }
+
+    var b8 = createArrowButton("Left", "←");
+    buttonbox.appendChild(b8);
+    b8.onclick = function () {
+        CameraMoveLeft();
+    }
+
+    var b9 = createArrowButton("Right", "→");
+    buttonbox.appendChild(b9);
+    b9.onclick = function () {
+        CameraMoveRight();
+    }
+
+    var b11 = createArrowButton("Down", "↓");
+    buttonbox.appendChild(b11);
+    b11.onclick = function () {
+        CameraMoveDown();
+    }
+
+    var zoomInButton = createArrowButton("ZoomIn", "+");
+    buttonbox.appendChild(zoomInButton);
+    zoomInButton.onclick = function () {
+        CameraZoomIn();
+    }
+
+    var zoomOutButton = createArrowButton("ZoomOut", "-");
+    buttonbox.appendChild(zoomOutButton);
+    zoomOutButton.onclick = function () {
+        CameraZoomOut();
+    }
+
+
+    function createArrowButton(id, arrowSymbol) {
+        var button = document.createElement('button');
+        button.id = id;
+        button.innerHTML = arrowSymbol;
+        button.style.display = "block";
+        button.style.width = "100%";
+        button.style.fontSize = "1.5em"; // Adjust the font size as needed
+        return button;
+    }
+
+
+    var CameraMoveRight = function () {
+        var newMesh = scene.getMeshByName("parent");
+        newMesh.position = new BABYLON.Vector3(
+            newMesh.position.x + 0.1,
+            newMesh.position.y,
+            newMesh.position.z);
+
+    }
+
+    var CameraMoveLeft = function () {
+        var newMesh = scene.getMeshByName("parent");
+        newMesh.position = new BABYLON.Vector3(
+            newMesh.position.x - 0.1,
+            newMesh.position.y,
+            newMesh.position.z);
+
+    }
+
+    var CameraMoveUp = function () {
+        var newMesh = scene.getMeshByName("parent");
+        newMesh.position = new BABYLON.Vector3(
+            newMesh.position.x,
+            newMesh.position.y + 0.1,
+            newMesh.position.z);
+
+    }
+
+    var CameraMoveDown = function () {
+        var newMesh = scene.getMeshByName("parent");
+        newMesh.position = new BABYLON.Vector3(
+            newMesh.position.x,
+            newMesh.position.y - 0.1,
+            newMesh.position.z);
+
+    }
+
+    var CameraZoomIn = function () {
+        var newMesh = scene.getMeshByName("parent");
+
+        newMesh.position = new BABYLON.Vector3(
+            newMesh.position.x,
+            newMesh.position.y,
+            newMesh.position.z - 0.1);
+
+    }
+
+    var CameraZoomOut = function () {
+        var newMesh = scene.getMeshByName("parent");
+
+        newMesh.position = new BABYLON.Vector3(
+            newMesh.position.x,
+            newMesh.position.y,
+            newMesh.position.z + 0.1);
+    }
+
+    return scene;
+};;
+                window.initFunction = async function() {
+                    
+                    
+                    
+                    var asyncEngineCreation = async function() {
+                        try {
+                        return createDefaultEngine();
+                        } catch(e) {
+                        console.log("the available createEngine function failed. Creating the default engine instead");
+                        return createDefaultEngine();
+                        }
+                    }
+
+                    window.engine = await asyncEngineCreation();
+        if (!engine) throw 'engine should not be null.';
+        startRenderLoop(engine, canvas);
+        window.scene = createScene();};
+        initFunction().then(() => {scene.then(returnedScene => { sceneToRender = returnedScene; });
+                            
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
